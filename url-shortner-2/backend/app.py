@@ -1,21 +1,28 @@
 from flask import Flask, request, jsonify, redirect, session
 from flask_cors import CORS
+
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from database import get_db, init_db
 from url_shortener import generate_short_code
 
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
+
+# =========================================================
+# FLASK APP
+# =========================================================
 
 app = Flask(__name__)
+
 
 # Secret key for login sessions
 app.secret_key = os.environ.get(
     "SECRET_KEY",
     "dev-secret-key-change-this-later"
 )
+
 
 # Allow frontend to communicate with Flask
 CORS(app, supports_credentials=True)
@@ -31,6 +38,7 @@ init_db()
 
 @app.route("/")
 def home():
+
     return jsonify({
         "message": "URL Shortener API is running!",
         "status": "success"
@@ -50,14 +58,18 @@ def register():
     email = data.get("email")
     password = data.get("password")
 
+
     # Check required fields
     if not name or not email or not password:
+
         return jsonify({
             "success": False,
             "message": "All fields are required"
         }), 400
 
+
     conn = get_db()
+
 
     # Check if email already exists
     existing_user = conn.execute(
@@ -65,7 +77,9 @@ def register():
         (email,)
     ).fetchone()
 
+
     if existing_user:
+
         conn.close()
 
         return jsonify({
@@ -73,8 +87,10 @@ def register():
             "message": "Email already registered"
         }), 409
 
+
     # Hash password
     hashed_password = generate_password_hash(password)
+
 
     # Create user
     cursor = conn.execute(
@@ -85,11 +101,13 @@ def register():
         (name, email, hashed_password)
     )
 
+
     conn.commit()
 
     user_id = cursor.lastrowid
 
     conn.close()
+
 
     return jsonify({
         "success": True,
@@ -110,13 +128,17 @@ def login():
     email = data.get("email")
     password = data.get("password")
 
+
     if not email or not password:
+
         return jsonify({
             "success": False,
             "message": "Email and password are required"
         }), 400
 
+
     conn = get_db()
+
 
     user = conn.execute(
         """
@@ -127,26 +149,36 @@ def login():
         (email,)
     ).fetchone()
 
+
     conn.close()
 
+
     if not user:
+
         return jsonify({
             "success": False,
             "message": "Invalid email or password"
         }), 401
 
+
     # Verify password
-    if not check_password_hash(user["password"], password):
+    if not check_password_hash(
+        user["password"],
+        password
+    ):
+
         return jsonify({
             "success": False,
             "message": "Invalid email or password"
         }), 401
+
 
     # Create login session
     session["user_id"] = user["id"]
     session["user_name"] = user["name"]
     session["user_email"] = user["email"]
     session["role"] = user["role"]
+
 
     return jsonify({
         "success": True,
@@ -169,6 +201,7 @@ def logout():
 
     session.clear()
 
+
     return jsonify({
         "success": True,
         "message": "Logged out successfully"
@@ -183,9 +216,11 @@ def logout():
 def current_user():
 
     if "user_id" not in session:
+
         return jsonify({
             "logged_in": False
         })
+
 
     return jsonify({
         "logged_in": True,
@@ -211,36 +246,46 @@ def shorten_url():
     url_type = data.get("url_type", "Public")
     expiry_date = data.get("expiry_date")
 
+
     if not original_url:
+
         return jsonify({
             "success": False,
             "message": "URL is required"
         }), 400
 
+
     # Private URLs require login
     if url_type == "Private" and "user_id" not in session:
+
         return jsonify({
             "success": False,
             "message": "Login required for private URLs"
         }), 401
 
+
     # Generate unique short code
     conn = get_db()
+
 
     while True:
 
         short_code = generate_short_code()
+
 
         existing = conn.execute(
             "SELECT id FROM urls WHERE short_code = ?",
             (short_code,)
         ).fetchone()
 
+
         if not existing:
             break
 
+
     # Logged-in user
     user_id = session.get("user_id")
+
 
     # Save URL
     cursor = conn.execute(
@@ -264,11 +309,13 @@ def shorten_url():
         )
     )
 
+
     conn.commit()
 
     url_id = cursor.lastrowid
 
     conn.close()
+
 
     return jsonify({
         "success": True,
@@ -283,6 +330,7 @@ def shorten_url():
         }
     }), 201
 
+
 # =========================================================
 # GET PUBLIC URLS
 # =========================================================
@@ -291,6 +339,7 @@ def shorten_url():
 def get_public_urls():
 
     conn = get_db()
+
 
     urls = conn.execute(
         """
@@ -306,9 +355,12 @@ def get_public_urls():
         """
     ).fetchall()
 
+
     conn.close()
 
+
     result = []
+
 
     for url in urls:
 
@@ -321,10 +373,12 @@ def get_public_urls():
             "expiry_date": url["expiry_date"] or "Never"
         })
 
+
     return jsonify({
         "success": True,
         "urls": result
     })
+
 
 # =========================================================
 # GET MY URLS
@@ -334,12 +388,15 @@ def get_public_urls():
 def my_urls():
 
     if "user_id" not in session:
+
         return jsonify({
             "success": False,
             "message": "Login required"
         }), 401
 
+
     conn = get_db()
+
 
     urls = conn.execute(
         """
@@ -357,9 +414,12 @@ def my_urls():
         (session["user_id"],)
     ).fetchall()
 
+
     conn.close()
 
+
     result = []
+
 
     for url in urls:
 
@@ -372,6 +432,7 @@ def my_urls():
             "created_at": url["created_at"],
             "expiry_date": url["expiry_date"] or "Never"
         })
+
 
     return jsonify({
         "success": True,
@@ -387,12 +448,15 @@ def my_urls():
 def delete_url(url_id):
 
     if "user_id" not in session:
+
         return jsonify({
             "success": False,
             "message": "Login required"
         }), 401
 
+
     conn = get_db()
+
 
     url = conn.execute(
         """
@@ -400,10 +464,15 @@ def delete_url(url_id):
         FROM urls
         WHERE id = ? AND user_id = ?
         """,
-        (url_id, session["user_id"])
+        (
+            url_id,
+            session["user_id"]
+        )
     ).fetchone()
 
+
     if not url:
+
         conn.close()
 
         return jsonify({
@@ -411,13 +480,17 @@ def delete_url(url_id):
             "message": "URL not found"
         }), 404
 
+
     conn.execute(
         "DELETE FROM urls WHERE id = ?",
         (url_id,)
     )
 
+
     conn.commit()
+
     conn.close()
+
 
     return jsonify({
         "success": True,
@@ -433,18 +506,23 @@ def delete_url(url_id):
 def admin_urls():
 
     if "user_id" not in session:
+
         return jsonify({
             "success": False,
             "message": "Login required"
         }), 401
 
+
     if session.get("role") != "admin":
+
         return jsonify({
             "success": False,
             "message": "Admin access required"
         }), 403
 
+
     conn = get_db()
+
 
     urls = conn.execute(
         """
@@ -464,9 +542,12 @@ def admin_urls():
         """
     ).fetchall()
 
+
     conn.close()
 
+
     result = []
+
 
     for url in urls:
 
@@ -481,6 +562,7 @@ def admin_urls():
             "created_at": url["created_at"],
             "expiry_date": url["expiry_date"] or "Never"
         })
+
 
     return jsonify({
         "success": True,
@@ -497,6 +579,7 @@ def redirect_url(short_code):
 
     conn = get_db()
 
+
     url = conn.execute(
         """
         SELECT *
@@ -506,30 +589,54 @@ def redirect_url(short_code):
         (short_code,)
     ).fetchone()
 
+
     conn.close()
 
+
+    # Short URL does not exist
     if not url:
+
         return jsonify({
             "success": False,
             "message": "Short URL not found"
         }), 404
 
-    # Check expiry
+
+    # =====================================================
+    # CHECK EXPIRY
+    # =====================================================
+
     if url["expiry_date"]:
 
         try:
+
             expiry = datetime.fromisoformat(
-                url["expiry_date"]
+                url["expiry_date"].replace(
+                    "Z",
+                    "+00:00"
+                )
             )
 
-            if datetime.now() > expiry:
+
+            now = datetime.now(timezone.utc)
+
+
+            if now > expiry:
+
                 return jsonify({
                     "success": False,
                     "message": "This short URL has expired"
                 }), 410
 
+
         except ValueError:
+
             pass
+
+
+    # =====================================================
+    # REDIRECT
+    # =====================================================
 
     return redirect(url["original_url"])
 
@@ -539,6 +646,7 @@ def redirect_url(short_code):
 # =========================================================
 
 if __name__ == "__main__":
+
     app.run(
         host="0.0.0.0",
         port=5000,

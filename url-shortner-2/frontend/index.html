@@ -18,20 +18,92 @@
         <!-- URL Shortener -->
         <section class="shortener-box">
 
-            <label for="urlInput">URL :</label>
+    <div class="url-input-row">
 
-            <input
-                type="url"
-                id="urlInput"
-                placeholder="Enter your URL"
-                required
-            >
+        <label for="urlInput">
+            URL:
+        </label>
 
-            <button id="shortenBtn">
-                Shorten URL
-            </button>
+        <input
+            type="url"
+            id="urlInput"
+            placeholder="Enter your URL"
+            required
+        >
 
-        </section>
+    </div>
+
+
+    <div class="options-row">
+
+        <div class="option-group">
+
+            <label>
+                Type:
+            </label>
+
+            <label class="radio-option">
+                <input
+                    type="radio"
+                    name="urlType"
+                    value="Public"
+                    checked
+                >
+                Public
+            </label>
+
+            <label class="radio-option">
+                <input
+                    type="radio"
+                    name="urlType"
+                    value="Private"
+                >
+                Private
+            </label>
+
+        </div>
+
+
+        <div class="option-group">
+
+            <label for="expiryDate">
+                Expiry:
+            </label>
+
+            <select id="expiryDate">
+
+                <option value="">
+                    Never
+                </option>
+
+                <option value="1">
+                    1 Day
+                </option>
+
+                <option value="7">
+                    7 Days
+                </option>
+
+                <option value="30">
+                    30 Days
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <div class="button-row">
+
+        <button id="shortenBtn">
+            Shorten URL
+        </button>
+
+    </div>
+
+</section>
 
 
         <!-- URL Table -->

@@ -265,3 +265,155 @@ td a:hover {
         width: 100%;
     }
 }
+
+/* ==========================================
+   MY URLS
+========================================== */
+
+.checkbox-column {
+    width: 50px;
+}
+
+.checkbox-column input,
+.url-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.delete-container {
+    margin-top: 25px;
+}
+
+.delete-button {
+    padding: 14px 30px;
+
+    border: 2px solid #222;
+    border-radius: 12px;
+
+    background: #ffb3b3;
+
+    font-size: 17px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background: #ff9999;
+}
+
+
+/* Make tables readable on smaller screens */
+
+.urls-box {
+    overflow-x: auto;
+}
+
+table {
+    min-width: 850px;
+}
+
+/* ==========================================
+   URL CREATOR OPTIONS
+========================================== */
+
+.shortener-box {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 25px;
+}
+
+.url-input-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.url-input-row label {
+    font-size: 22px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.url-input-row input {
+    flex: 1;
+    height: 58px;
+
+    border: 2px solid #222;
+    border-radius: 12px;
+
+    padding: 0 18px;
+    font-size: 17px;
+}
+
+.options-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+.option-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    font-size: 17px;
+}
+
+.option-group > label:first-child {
+    font-weight: bold;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.radio-option input {
+    width: 17px;
+    height: 17px;
+}
+
+#expiryDate {
+    height: 42px;
+
+    border: 2px solid #222;
+    border-radius: 10px;
+
+    padding: 0 12px;
+
+    font-size: 16px;
+    background: white;
+}
+
+.button-row {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media (max-width: 700px) {
+
+    .url-input-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .options-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .button-row {
+        justify-content: stretch;
+    }
+
+    .button-row button {
+        width: 100%;
+    }
+}

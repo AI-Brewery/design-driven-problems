@@ -18,6 +18,36 @@ shortenBtn.addEventListener("click", async () => {
         return;
     }
 
+
+    // Get Public / Private selection
+    const selectedType =
+        document.querySelector(
+            'input[name="urlType"]:checked'
+        ).value;
+
+
+    // Get expiry selection
+    const expiryValue =
+        document.getElementById("expiryDate").value;
+
+
+    // Default: no expiry
+    let expiryDate = null;
+
+
+    // Calculate expiry date
+    if (expiryValue) {
+
+        const date = new Date();
+
+        date.setDate(
+            date.getDate() + Number(expiryValue)
+        );
+
+        expiryDate = date.toISOString();
+    }
+
+
     try {
 
         const response = await fetch(
@@ -29,46 +59,65 @@ shortenBtn.addEventListener("click", async () => {
                     "Content-Type": "application/json"
                 },
 
+                credentials: "include",
+
                 body: JSON.stringify({
-                    original_url: originalUrl
+
+                    original_url:
+                        originalUrl,
+
+                    url_type:
+                        selectedType,
+
+                    expiry_date:
+                        expiryDate
                 })
             }
         );
 
+
         const data = await response.json();
 
+
         if (!response.ok) {
+
             alert(data.message);
+
             return;
         }
 
-        alert("URL shortened successfully!");
 
+        alert(
+            "URL shortened successfully!"
+        );
+
+
+        // Clear input
         urlInput.value = "";
 
+
+        // Reload URL table
         loadUrls();
 
     } catch (error) {
 
         console.error(error);
 
-        alert("Could not connect to the backend.");
+        alert(
+            "Could not connect to the backend."
+        );
     }
+
 });
 
 
 /* ==========================================
-   LOAD URLS
+   LOAD PUBLIC URLS
 ========================================== */
 
 async function loadUrls() {
 
     try {
-
-        /*
-         * For now we use the public URL data
-         * directly from the backend later.
-         */
 
         const response = await fetch(
             `${API_URL}/api/urls`,
@@ -77,47 +126,67 @@ async function loadUrls() {
             }
         );
 
+
         if (!response.ok) {
             return;
         }
 
-        const data = await response.json();
+
+        const data =
+            await response.json();
+
 
         urlTableBody.innerHTML = "";
 
+
         data.urls.forEach(url => {
 
-            const row = document.createElement("tr");
+            const row =
+                document.createElement("tr");
+
 
             row.innerHTML = `
+
                 <td>
-                    <a href="${url.short_url}" target="_blank">
+
+                    <a
+                        href="${url.short_url}"
+                        target="_blank"
+                    >
                         ${url.short_url}
                     </a>
+
                 </td>
+
 
                 <td>
                     ${url.original_url}
                 </td>
 
+
                 <td>
                     ${formatDate(url.created_at)}
                 </td>
 
+
                 <td>
                     ${url.expiry_date}
                 </td>
+
             `;
+
 
             urlTableBody.appendChild(row);
 
         });
+
 
     } catch (error) {
 
         console.error(error);
 
     }
+
 }
 
 
@@ -131,9 +200,13 @@ function formatDate(dateString) {
         return "-";
     }
 
-    const date = new Date(dateString);
+
+    const date =
+        new Date(dateString);
+
 
     return date.toLocaleDateString();
+
 }
 
 
