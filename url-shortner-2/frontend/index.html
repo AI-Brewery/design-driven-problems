@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>URL Shortener</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <h1>Home</h1>
+
+    <main class="container">
+
+        <!-- URL Shortener -->
+        <section class="shortener-box">
+
+            <label for="urlInput">URL :</label>
+
+            <input
+                type="url"
+                id="urlInput"
+                placeholder="Enter your URL"
+                required
+            >
+
+            <button id="shortenBtn">
+                Shorten URL
+            </button>
+
+        </section>
+
+
+        <!-- URL Table -->
+        <section class="urls-box">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Short URL</th>
+                        <th>Original URL</th>
+                        <th>Create Date</th>
+                        <th>Expiry Date</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="urlTableBody">
+
+                    <!-- URLs will be inserted here -->
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+    <script src="js/home.js"></script>
+
+</body>
+</html>
