@@ -16,16 +16,25 @@ from datetime import datetime, timezone
 
 app = Flask(__name__)
 
-
-# Secret key for login sessions
 app.secret_key = os.environ.get(
     "SECRET_KEY",
     "dev-secret-key-change-this-later"
 )
 
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+app.config["SESSION_COOKIE_SECURE"] = False
 
-# Allow frontend to communicate with Flask
-CORS(app, supports_credentials=True)
+CORS(
+    app,
+    supports_credentials=True,
+    origins=[
+        "http://127.0.0.1:3000",
+        "http://localhost:3000",
+        "http://127.0.0.1:3001",
+        "http://localhost:3001"
+    ]
+)
 
 
 # Initialize database
