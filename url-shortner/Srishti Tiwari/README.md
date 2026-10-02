@@ -186,7 +186,7 @@ Response: 200 OK if deleted
 - No automated tests included — all endpoints were manually verified (see testing commands below)
 
 ## Manual Testing Performed
-- Created a short URL, redirected successfully, verified click count incremented, deleted it
+- Created a short URL, redirected successfully, verified click count incremented via /stats, deleted it
 - Verified invalid URL is rejected (400)
 - Verified duplicate custom alias is rejected (409)
-
+- Verified expired link returns 404 ("link expired") instead of redirecting
