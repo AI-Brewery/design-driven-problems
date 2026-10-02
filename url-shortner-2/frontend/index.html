@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>URL Shortener</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div id="navbar"></div>
+    <h1>Home</h1>
+
+    <main class="container">
+
+        <!-- URL Shortener -->
+        <section class="shortener-box">
+
+    <div class="url-input-row">
+
+        <label for="urlInput">
+            URL:
+        </label>
+
+        <input
+            type="url"
+            id="urlInput"
+            placeholder="Enter your URL"
+            required
+        >
+
+    </div>
+
+
+    <div class="options-row">
+
+        <div class="option-group">
+
+            <label>
+                Type:
+            </label>
+
+            <label class="radio-option">
+                <input
+                    type="radio"
+                    name="urlType"
+                    value="Public"
+                    checked
+                >
+                Public
+            </label>
+
+            <label class="radio-option">
+                <input
+                    type="radio"
+                    name="urlType"
+                    value="Private"
+                >
+                Private
+            </label>
+
+        </div>
+
+
+        <div class="option-group">
+
+            <label for="expiryDate">
+                Expiry:
+            </label>
+
+            <select id="expiryDate">
+
+                <option value="">
+                    Never
+                </option>
+
+                <option value="1">
+                    1 Day
+                </option>
+
+                <option value="7">
+                    7 Days
+                </option>
+
+                <option value="30">
+                    30 Days
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <div class="button-row">
+
+        <button id="shortenBtn">
+            Shorten URL
+        </button>
+
+    </div>
+
+</section>
+
+
+        <!-- URL Table -->
+        <section class="urls-box">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Short URL</th>
+                        <th>Original URL</th>
+                        <th>Create Date</th>
+                        <th>Expiry Date</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="urlTableBody">
+
+                    <!-- URLs will be inserted here -->
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+    <script src="js/nav.js"></script>
+    <script src="js/home.js"></script>
+
+</body>
+</html>

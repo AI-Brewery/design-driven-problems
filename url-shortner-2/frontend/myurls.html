@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My URLs - URL Shortener</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div id="navbar"></div>
+    <h1>My URLs</h1>
+
+    <main class="container">
+
+        <section class="urls-box">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th class="checkbox-column">
+                            <input
+                                type="checkbox"
+                                id="selectAll"
+                            >
+                        </th>
+
+                        <th>Short URL</th>
+
+                        <th>Original URL</th>
+
+                        <th>Type</th>
+
+                        <th>Create Date</th>
+
+                        <th>Expiry Date</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="myUrlsTableBody">
+
+                    <!-- URLs will be loaded here -->
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+
+        <div class="delete-container">
+
+            <button
+                id="deleteBtn"
+                class="delete-button"
+            >
+                Delete
+            </button>
+
+        </div>
+
+    </main>
+
+
+    <script src="js/myurls.js"></script>
+
+</body>
+
+</html>
